@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+    <head>
+        <title>Jobs</title>
+        
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/styles/forms.css">
+        <link rel="stylesheet" href="/styles/started.css">
+        <style>
+            
+            .dropdown,.content{
+                top:70px;
+            }
+        </style>
+        <script>
+            $(document).ready(()=>{
+                $("#notify").click(()=>{
+                    $.ajax({
+                        url:'/notifications',
+                        type:'GET',
+                        dataType: 'json',
+                        success:(data)=>{
+                            $('#notifier').text('');
+                            console.log('ajax success',data);
+                            data.forEach((notification)=>{
+                                $('#notifier').append('<p>'+notification.message+'</p>');
+                                $('#notifier').append('<p><a href="/profile/'+notification.sender+'">Click Here To View His Profile!</a></p>');
+                                $('#notifier').append('<p>'+notification.date+'<span>   </span>'+notification.time+'</p>');
+                            });
+                            $('#notifier').toggleClass('show');
+                        }
+                    })
+                })
+            })
+        </script>
+    </head>
+    <body>
+            <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <!-- BRAND -->
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#alignment-example" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            </button>
+                            <a class="navbar-brand" href="#" style="color:white">Pickuply</a>
+                        </div>
+            
+                        <!-- COLLAPSIBLE NAVBAR -->
+                        <div class="collapse navbar-collapse" id="alignment-example">
+            
+                            <!-- Links -->
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/"><span>Home</span></a>
+                                </li>                    
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="/faq"><span>FAQs</span></a>
+                                </li>
+                                <% if(user == undefined){ %>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/login"><span>SignIn</span></a>
+                                </li>
+                                <% } %>
+                                <% if(user != undefined){ %>
+                                <% if(user.type != 'Client' && user.type != undefined){ %>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/found/jobs"><span>Find Jobs</span></a>
+                                    </li>
+                                <% } %>
+                                <li>
+                                    <a href="/profile">
+                                        <img style="width:30px" src='../assets/profiles/<%=user.image %>'><span class="vl"><%= user.local.name %></span>
+                                    </a>
+                                </li>
+                                <li>
+                                  <a href='#' id="notify" ><span class="fa fa-bell"><span><%=user.count%></span></span></a>
+                                </li>
+                                <li>
+                                    <a href= "/logout"><span>Logout</span></a>
+                                </li>
+                                <%}%>
+                            </ul>
+            
+                            <!-- Search -->
+                            <form class="navbar-form" action="/found/started" method="POST" role="search">
+                                <div class="form-group">
+                                <input type="text" class="form-control" name="location" placeholder="Enter City Name">
+                                </div>
+                                <button type="submit" class="btn btn-success btn2"><span class="fa fa-search"></span></button>
+                            </form>
+            
+                        </div>
+                    </div>
+                </nav>      
+        
+        <div id="notifier">
+        </div>
+
+        <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Categories
+                <span class="caret"></span></button>
+            <div class="dropdown-menu">
+            <div>
+                <p>Teachers Jobs</p>
+                <a href="/found/jobs/Maths">Maths Jobs</a>
+                <a href="/found/jobs/Physics">Physics Jobs</a>
+                <a href="/found/jobs/Chemistry">Chemistry Jobs</a>
+                <a href="/found/jobs/Computer">Computer Jobs</a>
+                <a href="/found/jobs/Statistics">Statistics Jobs</a>
+            </div>  
+            <div>
+                <p>Coaches Jobs</p>  
+                <a href="/found/jobs/Cricket">Cricket Jobs</a>
+                <a href="/found/jobs/Badminton">Badminton Jobs</a>
+                <a href="/found/jobs/Tennis">Tennis Jobs</a>
+                <a href="/found/jobs/MartialArts">Martial Jobs</a>
+                <a href="/found/jobs/Hockey">Hockey Jobs</a>
+            </div>
+            <div>
+                <p>Helpers Jobs</p>   
+                <a href="/found/jobs/Guide">Guides Jobs</a>
+                <a href="/found/jobs/Yoga">Yoga Jobs</a>
+                <a href="/found/jobs/Trainer">Trainers Jobs</a>
+                <a href="/found/jobs/DayCareHelper">Day Care Jobs</a>
+                <a href="/found/jobs/Helper">Helpers Jobs</a>
+            </div>
+            </div>
+        </div>
+
+        <div class="content">
+             <% jobs.forEach(function(job){ %>            
+                <div class="profile-card-4 text-center"><img src="http://envato.jayasankarkr.in/code/profile/assets/img/profile-4.jpg" class="img img-responsive">
+                    <div class="profile-content">
+                        <div class="profile-name"><%= job.clientName %>
+                            <p>@<%= job.general.status %></p>
+                        </div>
+                        <div class="profile-description"><%= job.projectDescription.substring(0,150) %></div>
+                        <div class="row">
+                            
+                        <div class="profile-overview">
+                            <a href='/profile/<%= job.email %>' class="button" >Apply</a>
+                        </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+        <div id="map"><p>Current Location</p></div>
+        <script>
+            var map;
+            var lat = 33.666667;
+            var lng = 73.166667;
+            
+            $.ajax({
+                method:"GET",
+                url:"http://open.mapquestapi.com/geocoding/v1/address?key=%20WIJOhRxmKwNvqJm5aIMoCUJo3jWl8SsM&location=<%=location %>",
+                dataType: "json"
+            }).done(function(data){
+                lat = data.results[0].locations[0].latLng.lat;
+                lng = data.results[0].locations[0].latLng.lng;
+                initMap();
+            });
+            
+            $("#city").val("");
+            function initMap() {
+                // The location of Uluru
+                var uluru = {lat: lat, lng: lng};
+                // The map, centered at Uluru
+                var map = new google.maps.Map(
+                    document.getElementById('map'), {zoom: 9, center: uluru});
+                // The marker, positioned at Uluru
+                var marker = new google.maps.Marker({position: uluru, map: map});
+            }
+              
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBC4hnq7_3gMkMqgqTZJnSroe_czJnD0Ek&callback=initMap"async defer></script>
+
+        <footer>
+    
+                <div class="row">
+                
+                        <div class="col-lg-5 col-md-5 col-sm-4 col-xs-12">
+                            <ul class="adress">
+                                <span>Address</span>    
+                                <li>
+                                    <p>It’s not just about finding the right work. You’re also looking for the right person. That’s why we’ve created a place where you can find and share trusted tutors, helpers and coaches across Pakistan.</p>
+                                    </li>
+                                        
+                                    <li>
+                                    <p>+90 1234 56789</p>
+                                    </li>
+                                        
+                                    <li>
+                                    <p>info@gmail.com</p>
+                                    </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <ul class="contact">
+                                <span>Contact</span>    
+                                <li>
+                                <a href="/">Home</a>
+                                </li>
+                                    
+                                <li>
+                                <a href="/about">About</a>
+                                </li>
+                                    
+                                <li>
+                                <a href="/faq">FAQ's</a>
+                                </li>
+                                    
+                            </ul>
+                        </div>
+                    
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                            <ul class="social">
+                                        <span>Social</span>    
+                                        <li>
+                                            <a href="https://www.facebook.com/"><i class="fa fa-facebook fa-2x"></i></a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="https://github.com/"><i class="fa fa-github fa-2x"></i></a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="https://pk.linkedin.com/"><i class="fa fa-linkedin fa-2x"></i></a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="https://www.tumblr.com/"><i class="fa fa-tumblr fa-2x"></i></a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="https://mail.google.com/"><i class="fa fa-google-plus fa-2x"></i></a>
+                                        </li>
+                                        
+                            </ul>
+                        </div>
+                    
+                    
+                    </div> 
+            
+        </footer>
+    </body>
+</html>

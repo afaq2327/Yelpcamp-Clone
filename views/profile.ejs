@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+    <title>Profile</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../styles/forms.css">
+    <link rel="stylesheet" href="../styles/profile.css">
+    
+    <script>
+        $(document).ready(()=>{
+            $("#notify").click(()=>{
+                $.ajax({
+                    url:'/notifications',
+                    type:'GET',
+                    dataType: 'json',
+                    success:(data)=>{
+                        $('#notifier').text('');
+                        console.log('ajax success',data);
+                        data.forEach((notification)=>{
+                            $('#notifier').append('<p>'+notification.message+'</p>');
+                            $('#notifier').append('<p><a href="/profile/'+notification.sender+'">Click Here To View His Profile!</a></p>');
+                            $('#notifier').append('<p>'+notification.date+'<span>   </span>'+notification.time+'</p>');
+                        });
+                        $('#notifier').toggleClass('show');
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+        
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- BRAND -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#alignment-example" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#" style="color:white">Pickuply</a>
+            </div>
+
+            <!-- COLLAPSIBLE NAVBAR -->
+            <div class="collapse navbar-collapse" id="alignment-example">
+
+                <!-- Links -->
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><span>Home</span></a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/faq"><span>FAQs</span></a>
+                    </li>
+                    <% if(user == undefined){ %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><span>SignIn</span></a>
+                    </li>
+                    <% } %>
+                    <% if(user != undefined){ %>
+                    <% if(user.type != 'Client' && user.type != undefined){ %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/found/jobs"><span>Find Jobs</span></a>
+                        </li>
+                    <% } %>
+                    <li>
+                        <a href="/profile">
+                            <img style="width:30px" src='../assets/profiles/<%=user.image %>'><span class="vl"><%= user.local.name %></span>
+                        </a>
+                    </li>
+                    <li>
+                      <a href='#' id="notify" ><span class="fa fa-bell"><span><%=user.count%></span></span></a>
+                    </li>
+                    <li>
+                        <a href= "/logout"><span>Logout</span></a>
+                    </li>
+                    <%}%>
+                </ul>
+
+                <!-- Search -->
+                <form class="navbar-form" action="/found/started" method="POST" role="search">
+                    <div class="form-group">
+                    <input type="text" class="form-control" name="location" placeholder="Enter City Name">
+                    </div>
+                    <button type="submit" class="btn btn-success btn2"><span class="fa fa-search"></span></button>
+                </form>
+
+            </div>
+        </div>
+    </nav>         
+    
+    
+    <div id="notifier">
+    </div>
+    
+
+<div class="display">
+        <!-- show any messages that come back with authentication -->
+        <% if (message.length > 0) { %>
+            <div class="alert alert-success" ><%= message %></div>
+        <% } %>
+    <div class="heeder">
+        <% if(anyuser.email != user.email){%>
+        <a href="/notify/<%=anyuser.email%>" class="btn btn-primary">Send Mail</a>
+        <%}else{%>
+        <a href="/found/update" class="btn btn-primary">Update Profile</a>
+        <a href="/found/delete" class="btn btn-danger">Delete Profile</a>
+        <%}%>
+        <hr>
+    </div>
+    
+    <div class="main">
+        <div class="left">
+            <h1><%= anyuser.local.name %></h1>
+            <p><%= anyuser.description %></p>
+            <h3>General Info</h3>
+            <table>
+                <tr>
+                    <td>City</td>
+                    <td><%= anyuser.location %></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td><%= anyuser.email %></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td><%= anyuser.phone %></td>
+                </tr>
+                <tr>
+                    <td>Registered As</td>
+                    <td><%= anyuser.type %></td>
+                </tr>
+            </table>
+        </div>
+        <div class="right" style="background:url('../assets/profiles/<%=anyuser.image %>');background-size: contain; background-repeat:no-repeat ">
+            
+        </div>
+        
+    </div>
+    
+    <div class="footer"> 
+        <hr>      
+        <a href="<%=anyuser.facebookLink%>"><i class="fa fa-facebook fa-2x"></i></a>
+        <a href="<%=anyuser.twitterLink%>"><i class="fa fa-twitter fa-2x"></i></a>
+        <a href="<%=anyuser.linkdinLink%>"><i class="fa fa-linkedin fa-2x"></i></a>
+    </div>
+</div>
+
+
+<footer>
+    
+        <div class="row">
+        
+                <div class="col-lg-5 col-md-5 col-sm-4 col-xs-12">
+                    <ul class="adress">
+                        <span>Address</span>    
+                        <li>
+                            <p>It’s not just about finding the right work. You’re also looking for the right person. That’s why we’ve created a place where you can find and share trusted tutors, helpers and coaches across Pakistan.</p>
+                            </li>
+                                
+                            <li>
+                            <p>+90 1234 56789</p>
+                            </li>
+                                
+                            <li>
+                            <p>info@gmail.com</p>
+                            </li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <ul class="contact">
+                        <span>Contact</span>    
+                        <li>
+                        <a href="/">Home</a>
+                        </li>
+                            
+                        <li>
+                        <a href="/about">About</a>
+                        </li>
+                            
+                        <li>
+                        <a href="/faq">FAQ's</a>
+                        </li>
+                            
+                    </ul>
+                </div>
+            
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                    <ul class="social">
+                                <span>Social</span>    
+                                <li>
+                                    <a href="https://www.facebook.com/"><i class="fa fa-facebook fa-2x"></i></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="https://github.com/"><i class="fa fa-github fa-2x"></i></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="https://pk.linkedin.com/"><i class="fa fa-linkedin fa-2x"></i></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="https://www.tumblr.com/"><i class="fa fa-tumblr fa-2x"></i></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="https://mail.google.com/"><i class="fa fa-google-plus fa-2x"></i></a>
+                                </li>
+                                
+                    </ul>
+                </div>
+            
+            
+            </div> 
+    
+</footer>
+    
+</body>
+</html>

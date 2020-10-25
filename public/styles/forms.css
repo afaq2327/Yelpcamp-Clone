@@ -1,0 +1,160 @@
+body{
+    background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);overflow-x: hidden;
+    /* background-repeat:no-repeat; */
+    background-size: cover; 
+    overflow-y: scroll;
+}
+.container{
+    border-radius: 20px;
+    box-shadow: rgba(0,0,0,0.8) 0 0 10px;
+    margin:150px auto;
+    max-width: 600px;
+    background:#eaeaea;
+}
+.col-sm-6 {
+    width: 100%;
+}
+.col-sm-offset-3 {
+    margin-left: 0%;
+}
+.btn{
+    width:150px;
+}
+.oauth{
+    display:flex;
+    justify-content:space-between;
+}
+select {
+    font-family: roboto;
+    width: 150px;
+    height: 25px;
+    font-size: 20px;
+    border: none;
+    user-select: none;
+    cursor: pointer;
+}
+@media (max-width: 550px) {
+    .oauth{
+        display:flex;
+        flex-direction: column;
+        justify-content:space-between; 
+    }
+    a{
+        margin-top:20px;
+    }
+}
+
+footer{
+    background-color: #2d3f51;
+    padding:70px 0px;
+    position:relative;
+    top:50px;
+}	       
+
+footer ul li{
+    padding:5px 0px;
+}
+
+.adress span , .contact span , .social span{
+    color: #FFF; 
+    font-weight: 800; 
+    padding-bottom: 10px; 
+    margin-bottom: 20px;
+    display: block;
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 3px;
+}
+
+.adress li p , .contact li a , .social li a{
+    color:#FFF;
+    letter-spacing: 2px;
+    text-decoration:none;
+    font-size:15px;
+}
+
+.social li{
+    float:left;
+}
+
+.adress , .contact , .social {
+    list-style: none;
+}
+
+.fa{
+    color:#9c9c9c;
+    margin-right: 15px;
+    font-size:14px;
+}
+
+.navbar{
+    background:#2d3f51;
+    position:fixed;
+    top:0;
+    margin:0;
+    padding:0;
+    width:100%;
+    z-index:10;  
+    border:none;
+    border-radius:0%;
+    box-shadow: rgba(0,0,0,0.8) 0 0 10px;
+}
+
+
+@media (max-width: 550px) {
+    .navbar-brand {
+        padding: 0px 15px;
+        line-height: 10px;
+    }
+}
+
+.btn2{
+    width:40px;
+    
+}
+.fa-search{
+    color:white;
+}
+
+footer{
+    border-radius:0%;
+    box-shadow: rgba(0,0,0,0.8) 0 0 10px;
+    position:relative;
+    top:50px;
+}
+li span{
+    color: #FFF;
+}
+li span:hover{
+    color: #7f8284;
+}
+.vl {
+    
+    border-left: 16px solid #33383c;
+    height: 30px;
+}
+a img{
+    width:50px;
+    height:25px;
+    margin:0;
+    border-radius:25px;
+    box-shadow: rgba(0,0,0,0.8) 0 0 4px;
+}
+
+#notifier{
+    display:none;
+    position: fixed;
+    top: 60px;
+    min-width:100%;
+    z-index:15;
+    text-align: right;
+    overflow:auto;
+    scrollbar-width: none;
+    max-height:100px;
+}
+#notifier p{
+    margin-right:50px;
+}
+.show{
+    display: block;
+}

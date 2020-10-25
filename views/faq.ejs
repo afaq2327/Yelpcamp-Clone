@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../styles/forms.css">
+    <link rel="stylesheet" href="../styles/faq.css">
+  </head>
+
+  <script>
+    //faqs mandatory initial script
+$(document).ready(function() {        
+    $('#faq-div-sp').hide();
+    $('#service2').hide();
+    $('#service3').hide();
+    $('#service1').show();
+});
+  //faq selector script
+  function selectButton(id){
+    var b1 = document.getElementById(id);
+    b1.style.backgroundColor = "#2d3f51";
+    b1.style.color = "white";
+    if (id == "1"){
+      var b2 = document.getElementById("2");
+      b2.style.backgroundColor = "white";
+      b2.style.color = "#2d3f51";
+      b2.style.border = "block";
+    }
+    else{
+      var b2 = document.getElementById("1");
+      b2.style.backgroundColor = "white";
+      b2.style.color = "#2d3f51";
+      b2.style.border = "block";  
+    }      
+  }
+  //faq data toggle
+  $(document).ready(function(){
+    $("#1").click(function () {
+      $("#faq-div-sp").hide();
+      $("#faq-div-client").fadeIn();
+    });
+  });
+  $(document).ready(function(){
+    $("#2").click(function () {
+      $("#faq-div-client").hide();
+      $("#faq-div-sp").fadeIn(300);
+    });
+  });
+  //tabs toggle
+  $(document).ready(function(){
+    $("#tab1").click(function () {
+      $("#service2").hide();
+      $("#service3").hide();        
+      $("#service1").fadeIn();
+    });
+    $("#tab2").click(function () {
+      $("#service1").hide();
+      $("#service3").hide();        
+      $("#service2").fadeIn();        
+    });
+    $("#tab3").click(function () {
+      $("#service1").hide();
+      $("#service2").hide();
+      $("#service3").fadeIn();        
+    });
+
+    $("#notify").click(()=>{
+        $.ajax({
+            url:'/notifications',
+            type:'GET',
+            dataType: 'json',
+            success:(data)=>{
+                $('#notifier').text('');
+                console.log('ajax success',data);
+                data.forEach((notification)=>{
+                    $('#notifier').append('<p>'+notification.message+'</p>');
+                    $('#notifier').append('<p><a href="/profile/'+notification.sender+'">Click Here To View His Profile!</a></p>');
+                    $('#notifier').append('<p>'+notification.date+'<span>   </span>'+notification.time+'</p>');
+                });
+                $('#notifier').toggleClass('show');
+            }
+        })
+    })
+
+  });
+  </script><nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- BRAND -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#alignment-example" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#" style="color:white">Pickuply</a>
+            </div>
+
+            <!-- COLLAPSIBLE NAVBAR -->
+            <div class="collapse navbar-collapse" id="alignment-example">
+
+                <!-- Links -->
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><span>Home</span></a>
+                    </li>                    
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/faq"><span>FAQs</span></a>
+                    </li>
+                    <% if(user == undefined){ %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><span>SignIn</span></a>
+                    </li>
+                    <% } %>
+                    <% if(user != undefined){ %>
+                    <% if(user.type != 'Client' && user.type != undefined){ %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/found/jobs"><span>Find Jobs</span></a>
+                        </li>
+                    <% } %>
+                    <li>
+                        <a href="/profile">
+                            <img style="width:30px" src='../assets/profiles/<%=user.image %>'><span class="vl"><%= user.local.name %></span>
+                        </a>
+                    </li>
+                    <li>
+                      <a href='#' id="notify" ><span class="fa fa-bell"><span><%=user.count%></span></span></a>
+                    </li>
+                    <li>
+                        <a href= "/logout"><span>Logout</span></a>
+                    </li>
+                    <%}%>
+                </ul>
+
+                <!-- Search -->
+                <form class="navbar-form" action="/found/started" method="POST" role="search">
+                    <div class="form-group">
+                    <input type="text" class="form-control" name="location" placeholder="Enter City Name">
+                    </div>
+                    <button type="submit" class="btn btn-success btn2"><span class="fa fa-search"></span></button>
+                </form>
+
+            </div>
+        </div>
+    </nav>         
+    
+    
+    <div id="notifier">
+    </div>
+
+  <body>   
+
+    <div id="banner">
+      <h1>Frequently Asked Questions</h1>
+      <div id="search-div">
+      </div>    
+    </div>
+    
+
+    <main>      
+      <div class="row" style="margin: 0 auto; width: 100%; padding-top: 2%;"> 
+        <!-- faq selector -->
+        <div class="col-md-3 col-xs-12" id="selector-div">
+          <button style="border-bottom: none;" class="active" id="1" onmousedown="selectButton(1)" href="#" title="Show Client FAQs" data-toggle="popover" data-trigger="hover">Client FAQs</button>
+          <br>
+          <button style="border-top: none;" id="2" onmousedown="selectButton(2)" href="#" title="Show Service Provider FAQs" data-toggle="popover" data-trigger="hover">Service Provider FAQs</button>
+        </div>     
+        <!-- /faq selector -->
+        <!-- article -->
+        <article>
+          <!-- faq display -->
+          <div class="col-md-9 col-xs-12" id="faq-div">
+            <!-- client faqs -->
+            <div class="faq-div" id="faq-div-client">
+              <ul class="nav nav-pills " role="tablist" id="tabs" style="margin-bottom: 30px;">
+                  <li class="nav-item pill-1"><a class="nav-link" data-toggle="pill" id="tab1" href="#service1">Teacher</a></liclass="nav-item pill-2">
+                  <li class="nav-item pill-2"><a class="nav-link" data-toggle="pill" id="tab2" href="#service2">Coach</a></li>
+                  <li class="nav-item pill-3"><a class="nav-link" data-toggle="pill" id="tab3" href="#service3">Helper</a></li>
+              </ul>
+              <!-- tutor faq -->
+              <div id="service1" class="tab-pane">
+                <ol> 
+                  <li> 
+                    <a data-toggle="collapse" href="#s1c1" class="question">
+                      <span>How should I select a tutor?</span>
+                    </a> 
+                    <div id="s1c1" class="answer collapse"> 
+                      <p>You can narrow your search for a tutor by a number of criteria including location, 
+                        price, student rating, and subject. Once you view the tutor's profile you can also see their experience, 
+                        education background, availability, etc.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s1c2" class="question">
+                      <span>What age groups or grades do you tutor?</span> 
+                    </a> 
+                    <div id="s1c2" class="answer collapse">
+                      <p>PickUply.com provides tutoring for all age groups. This includes current students all the way from elementary school up 
+                        through various graduates programs. It also includes some people who aren't currently in school, 
+                        such as with computer help or music tutoring. It all depends on the subject matter. 
+                        While some tutors are college students, others are professional teachers. They provide tutoring and mentorship to all age groups. When selecting a tutor you can view their experience and background to decide which might be a good match for you.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s1c3" class="question">
+                      <span>What is my username? How do I retrieve my lost username?</span>
+                    </a> 
+                    <div id="s1c3" class="answer collapse"> 
+                      <p>Your email address can also be used for your username, so if you don't remember your username, just login with your email address instead.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s1c4" class="question">
+                      <span>What if I don't like the tutor?</span>
+                    </a> 
+                    <div id="s1c4" class="answer collapse"> 
+                      <p>If you didn't get any value out of the tutoring session, you can discuss a refund with your tutor (it is up to them). 
+                        Many tutors also offer a money back guarantee on the first session. 
+                        The good news is that there are no long term contracts or blocks of hours that you need to buy, 
+                        so you can stop working with a tutor at any time. The best way to proceed is to try it for an hour,
+                        if it's not a good match then simply part ways. There are a wide variety of tutors so feel free to shop around before deciding. 
+                        By interviewing the tutor on the phone before meeting you can usually determine if it will be a good fit.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s1c5" class="question">
+                      <span>Do you provide standardized testing tutors?</span>
+                    </a> 
+                    <div id="s1c5" class="answer collapse"> 
+                      <p>Yes, we have helped a number of people preparing for the SAT, ACT, GMAT, GRE, LSAT, MCAT, ISEE, and other types of exams.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                </ol>
+              </div>
+              <!-- /tutor faq -->
+              <!-- coach faq -->
+              <div id="service2" class="tab-pane">
+                <ol>
+                  <li> 
+                    <a data-toggle="collapse" href="#s2c1" class="question">
+                      <span>My child is small or has never played before, will he/she be OK?</span>
+                    </a> 
+                    <div id="s2c1" class="answer collapse"> 
+                      <p>We understand your concern. We take every precaution with our players including things like making sure each helmet is inspected in the offseason and re-certified or thrown away. We educate our coaches on the signs of concussion and each staff has a coach certified in CPR and first aid. Furthermore, our coaches manage practice to make sure that kids who are not yet as developed in the game or are smaller compete directly against other players who are at the same stage of development or size. Football is a physical sport, but injuries are not common.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s2c2" class="question">
+                      <span>Does my child have to get a physical?</span> 
+                    </a> 
+                    <div id="s2c2" class="answer collapse"> 
+                      <p>No, you child doesn't have to get a physical to get a coach.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s2c3" class="question">
+                      <span>I want to be a coach, what do I do?</span>
+                    </a> 
+                    <div id="s2c3" class="answer collapse"> 
+                      <p>Contact us through email for application to become a coach. Coaches are required to pass a criminal background check and successfully complete an online coaching certification course.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s2c4" class="question">
+                      <span>Is individual soccer training more effective than training in a group?</span> 
+                    </a> 
+                    <div id="s2c4" class="answer collapse"> 
+                      <p>Training in groups is better than individual training. Soccer performance results from the stablished relationships between subjetcs in terms of technical, tactical, physical and psychological contexts. When training isolated, you are not creating conditions to improve these relationships, than you are obviously wasting time. I suggest that team sports must be trained in team contexts.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                </ol>
+              </div>
+              <!-- /coach faq -->
+              <!-- helper faq -->
+              <div id="service3" class="tab-pane">
+                <ol>
+                  <li> 
+                    <a data-toggle="collapse" href="#s3c1" class="question">
+                      <span>Can Sitters provide care for my children during the day (child daycare)?</span>
+                    </a> 
+                    <div id="s3c1" class="answer collapse"> 
+                      <p>Absolutely! Our sitters are available for daytime childcare in your own home. We all have times when we have to attend an appointment, meeting or function where it's easier if children are looked after at home. Perhaps you need to work from home and could do with an extra pair of hands to take care of your children? Many parents find this service particularly useful during school holidays and as emergency cover at home when other childcare arrangements fail (if your childminder falls ill, or if your child is unwell and cannot attend school/nursery).</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s3c2" class="question">
+                      <span>I have some uncertainty about leaving my children with someone I don't know, wouldn't you?</span>
+                    </a> 
+                    <div id="s3c2" class="answer collapse"> 
+                      <p>Yes, many parents have these feelings when they leave their children with a babysitter they don't initially know - and then afterwards wonder what they were concerned about! You wouldn't be the first or last to have felt this when leaving your children at a playgroup, nursery or daycare centre. Our sitters have chosen to work with children because they enjoy it and you'll find that they are quick to put you and your family at ease. What Sitters' clients have found is that their family soon gets to know a small group of babysitters from their area.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s3c3" class="question">
+                      <span>Do you provide Sitters for school pick-ups?</span>
+                    </a> 
+                    <div id="s3c3" class="answer collapse"> 
+                      <p>We regret that we cannot provide Sitters childcarers to collect your children from school or after-school clubs. The primary role of your Sitters childcarer is to look after your children and keep them safe within your home - rather than act as a chaperone.</p>
+                    </div> 
+                  </li> 
+                  </br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s3c4" class="question">
+                      <span>What do you mean by professional childcare experience?</span>
+                    </a> 
+                    <div id="s3c4" class="answer collapse"> 
+                      <p>All Sitters childcarers have experience in professional childcare employment. The majority are OFSTED registered childminders, qualified nannies or nursery nurses, as well as teachers, teaching assistants and paediatric nurses.</p>
+                    </div> 
+                  </li> 
+                  <br>
+                  <li> 
+                    <a data-toggle="collapse" href="#s3c5" class="question">
+                      <span>Can you provide care for my child who has special needs?</span>
+                    </a> 
+                    <div id="s3c5" class="answer collapse"> 
+                      <p>Although some of our childcarers have special needs experience we are unable to guarantee that we have sufficient carers with the right experience in your area.</p>
+                    </div> 
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <!-- /helper faq -->
+            <!-- /client faq -->
+            <!-- service-provider faqs -->
+            <div class="faq-div" id="faq-div-sp">
+              <ol> 
+                <li>
+                  <a data-toggle="collapse" href="#sp1" class="question">
+                    <span>How can clients leave me a review? How do I get reviews?</span> 
+                  </a> 
+                  <div id="sp1" class="collapse"> 
+                    <p>After working with a client, they can login to their account and write you a review. We also send out automated emails to remind them a few weeks after they contact you. If the client forgets or chooses not to leave you a positive review, it never hurts to ask. They can login at any time to post reviews for tutors they have worked with in the past.</p>
+                  </div> 
+                </li> 
+                <br>
+                <li> 
+                  <a data-toggle="collapse" href="#sp2" class="question">
+                    <span>How long does it take to get contacted?</span> 
+                  </a> 
+                  <div id="sp2" class="answer collapse">
+                    <p>It varies a lot. Some service providers get numerous contacts within the first week and some never get a single one. Sorry, we wish we had a better answer for you here, but the best way to find out is to just try it. After all, it is free!</p>
+                  </div> 
+                </li> 
+                <br>
+                <li> 
+                  <a data-toggle="collapse" href="#sp3" class="question">
+                    <span>What should I do if the client refuses to pay?</span> 
+                  </a> 
+                  <div id="sp3" class="answer collapse"> 
+                      <p>While the vast majority of service transactions work out well for both parties, occasional non-payment is an unfortunate risk of the tutoring business (as with many other businesses).</br></br>
+
+                          Follow up at least once by phone and once by email to politely request payment. Many people simply get busy and bills have a way of being forgotten unless you remind them.</br></br>
+                          
+                          Perhaps the best way to avoid non-payment is to never provide service more than one session before getting paid. This will cut your losses if you do end up working with a client who is not honest.</br></br>
+                          
+                          Many service providers have an unofficial money back guarantee on the first session anyway. In fact, the first session is about seeing if it is a good match for both the client and the service provider. If the client decides to disappear and not pay after the first session, then it would not have worked out anyway. At least your time has now been freed up to find quality clients who will value your services and compensate you for them.</br></br>
+                          
+                         Finally, if you have a complaint about any specific client on our site, you can email support and describe the problem you are having. We do take action against specific clients who are not using the site honestly.</p>
+                  </div> 
+                </li> 
+                <br>
+                <li> 
+                  <a data-toggle="collapse" href="#sp4" class="question">
+                    <span>How do I get paid?</span> 
+                  </a> 
+                  <div id="sp4" class="answer collapse"> 
+                      <p>You get paid directly by the client. PickUply.com is not involved in any transactions between clients and service providers. This means that you can get paid the way most convenient for you and we won't ask for a percentage of your earnings.</p>
+                  </div> 
+                </li> 
+                <br>
+                <li> 
+                  <a data-toggle="collapse" href="#sp5" class="question">
+                    <span>Am I old enough or qualified enough to teach?</span> 
+                  </a> 
+                  <div id="sp5" class="answer collapse"> 
+                      <p>PickUply.com does not actually hire tutors as employees, independent contractors, or otherwise, so we can't answer this question. We simply provide a website where people can find each other, so how you use the service is up to you as long as you do so within the law.</p>
+                  </div> 
+                </li> 
+                <br>
+                <li> 
+                  <a data-toggle="collapse" href="#sp6" class="question">
+                    <span>This client is difficult.</span> 
+                  </a> 
+                  <div id="sp6" class="answer collapse"> 
+                      <p>With PickUply.com, you’re running your own business, so you can choose how to do so! UniversityTutor.com is in no position to tell you who to work with.</p>
+                  </div> 
+                </li> 
+                <br>
+                <li> 
+                  <a data-toggle="collapse" href="#sp7" class="question">
+                    <span>Why does my profile appear at the end of the results?</span> 
+                  </a> 
+                  <div id="sp7" class="answer collapse"> 
+                      <p>With tens of thousands of service providers using our platform, not all profiles can make it to the front page. Our ranking algorithm order changes over time to best serve our users’ needs, so your spot in the results may fluctuate.</p>
+                  </div> 
+                </li> 
+                <br>
+                <li> 
+                  <a data-toggle="collapse" href="#sp8" class="question">
+                    <span>How does this work?</span> 
+                  </a> 
+                  <div id="sp8" class="answer collapse"> 
+                      <p>You can sign up on our website if you would like to find jobs and earn some extra income. It is absolutely free to sign up and unlike most companies, we do not take a percentage of what your client pays. You get paid directly by the client and keep 100%!</p>
+                  </div>
+                </li> 
+                <br>
+                <li> 
+                  <a data-toggle="collapse" href="#sp9" class="question">
+                    <span>How can I close my account?</span> 
+                  </a> 
+                  <div id="sp9" class="answer collapse"> 
+                      <p>Login to your account and click the "Settings" tab. Then look for a link at the bottom of the page which says "Permanently close my account".</p>
+                  </div> 
+                </li>                                 
+              </ol>                
+            </div>   
+            <!-- /service-provider faqs  -->
+          </div>
+          <!-- /faq display -->
+        </article>
+        <!-- /article -->
+      </div>
+    </main>
+    <!-- /main -->
+
+    <!-- footer -->
+    <footer>
+    
+        <div class="row">
+        
+                <div class="col-lg-5 col-md-5 col-sm-4 col-xs-12">
+                    <ul class="adress">
+                        <span>Address</span>    
+                        <li>
+                            <p>It’s not just about finding the right work. You’re also looking for the right person. That’s why we’ve created a place where you can find and share trusted tutors, helpers and coaches across Pakistan.</p>
+                            </li>
+                                
+                            <li>
+                            <p>+90 1234 56789</p>
+                            </li>
+                                
+                            <li>
+                            <p>info@gmail.com</p>
+                            </li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                    <ul class="contact">
+                        <span>Contact</span>    
+                        <li>
+                        <a href="/">Home</a>
+                        </li>
+                            
+                        <li>
+                        <a href="/about">About</a>
+                        </li>
+                            
+                        <li>
+                        <a href="/faq">FAQ's</a>
+                        </li>
+                            
+                    </ul>
+                </div>
+            
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                    <ul class="social">
+                                <span>Social</span>    
+                                <li>
+                                    <a href="https://www.facebook.com/"><i class="fa fa-facebook fa-2x"></i></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="https://github.com/"><i class="fa fa-github fa-2x"></i></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="https://pk.linkedin.com/"><i class="fa fa-linkedin fa-2x"></i></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="https://www.tumblr.com/"><i class="fa fa-tumblr fa-2x"></i></a>
+                                </li>
+                                
+                                <li>
+                                    <a href="https://mail.google.com/"><i class="fa fa-google-plus fa-2x"></i></a>
+                                </li>
+                                
+                    </ul>
+                </div>
+            
+            
+            </div> 
+    
+</footer>
+    <!-- /footer -->
+  </body>
+</html>

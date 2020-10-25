@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+    <head>
+        <title>Pickuply</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="/styles/home.css">
+        <link rel="stylesheet" href="/styles/started.css">
+        <style>
+
+        </style>
+        <script>
+            $(document).ready(function(){
+             $.ajaxSetup({ cache: false });
+             $('#main').keyup(function(){
+              $('#result').html('');
+              $('#state').val('');
+              var searchField = $('#main').val();
+              var expression = new RegExp(searchField, "i");
+              
+              $.getJSON('assets/cities.json', function(data) {
+               $.each(data.Pakistan, function(key, value){
+                if (value.search(expression) != -1 && searchField !== "")
+                {
+                 $('#result').append('<option value="'+value+'">');
+                }
+               });   
+              });
+             });
+             $('#result').on('click', 'li', function(){
+              console.log('clicked');
+              var click_text = $(this).text();
+              $('#main').val(click_text);
+              $("#movie-card").addClass("hidden");
+              $('#search').val('');
+            });
+            });
+        </script>
+    </head>
+    <body>
+        <script>
+            $(window).on("load",function(){
+                $(".loader-wrapper").fadeOut(2000);
+            });
+        </script>
+        <!-- show any messages that come back with authentication -->
+        
+        <div class="loader-wrapper">
+            <span class="loader"><span class="loader-inner"></span></span>
+        </div>
+                  
+        <header>
+            <h2><a href="">PickUply</a></h2>
+            <nav>
+                <li><a class="active" href="">Home</a></li>
+                
+                <% if(!currentUser){ %>
+                    <li>
+                        <a href="/login">Login</a>
+                    </li>
+                    <% } else { %>
+                        <% if(currentUser.type != 'Client'){ %> <li><a href="/found/jobs">Find a Job</a></li> <% } %>
+        
+                        <li>
+                            <a href="/profile">
+                                <span><%= currentUser.local.name %></span>  <span><%=currentUser.count%></span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="/logout">Logout</a>
+                        </li>
+                        <% } %>
+                <li><a href="faq">FAQ's</a></li>
+            </nav>
+            
+        </header>
+        <% if (message.length > 0) { %>
+            <div class="alert alert-success"><%= message %></div>
+        <% } %>
+        
+        <section class="hero">
+        <div class="background-image" style = "background-image:url(assets/images/j-kelly-brito-PeUJyoylfe4-unsplash.jpg)"></div>
+        <div class="hero-content-area">
+            <h1>PICKUPLY</h1>
+            <h3>Find Tutors, Coaches & Helpers Nearby You</h3>
+            <form action="/found/started" method="Post"> 
+                <input type="text" id="main" name="location" placeholder="Your's Location" list = "result" required>
+                <datalist id="result"></datalist>
+                <button class="btn" id="mainbtn" type="submit" >Search</button>
+            </form>
+        </div>
+        
+        </section>
+
+        <section class="HighRated">
+            <h3 class="title">Browse our highest-rated customer service talent:</h3>
+            <p>It’s not just about finding the right work. You’re also looking for the right person. That’s why we’ve created a place where you can find and share trusted tutors, helpers and coaches across Pakistan.</p>
+            <hr>
+            <p class="desc"></p>
+            <ul class="grid">
+                <div class="profile-card-4 text-center"><img src="https://scontent-kut2-2.xx.fbcdn.net/v/t1.0-0/p600x600/70562084_2384563335151952_3725585302635413504_o.jpg?_nc_cat=105&_nc_ohc=vvKADJXm-hEAQnmQUThaKVDPWMb7zz8f0BQVgTe6mOPjT1A7glZQIAmFA&_nc_ht=scontent-kut2-2.xx&oh=9b9a6b99fb004df33b0812e3cb7b036f&oe=5EB00246" class="img img-responsive">
+                    <div class="profile-content">
+                        <div class="profile-name">Afaq Ahmed
+                            <p>@Web Developer</p>
+                        </div>
+                        <div class="profile-description">The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>
+                        
+                    </div>
+                </div>
+                <div class="profile-card-4 text-center"><img src="https://scontent-kut2-2.xx.fbcdn.net/v/t1.0-0/p600x600/70562084_2384563335151952_3725585302635413504_o.jpg?_nc_cat=105&_nc_ohc=vvKADJXm-hEAQnmQUThaKVDPWMb7zz8f0BQVgTe6mOPjT1A7glZQIAmFA&_nc_ht=scontent-kut2-2.xx&oh=9b9a6b99fb004df33b0812e3cb7b036f&oe=5EB00246" class="img img-responsive">
+                    <div class="profile-content">
+                        <div class="profile-name">Ahmed Ali Khan
+                            <p>@Content Writter</p>
+                        </div>
+                        <div class="profile-description">The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>
+                        
+                    </div>
+                </div>
+                <div class="profile-card-4 text-center"><img src="https://scontent-kut2-2.xx.fbcdn.net/v/t1.0-0/p600x600/70562084_2384563335151952_3725585302635413504_o.jpg?_nc_cat=105&_nc_ohc=vvKADJXm-hEAQnmQUThaKVDPWMb7zz8f0BQVgTe6mOPjT1A7glZQIAmFA&_nc_ht=scontent-kut2-2.xx&oh=9b9a6b99fb004df33b0812e3cb7b036f&oe=5EB00246" class="img img-responsive">
+                    <div class="profile-content">
+                        <div class="profile-name">Muhammad Sheryar
+                            <p>@Helper</p>
+                        </div>
+                        <div class="profile-description">The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</div>
+                        
+                    </div>
+                </div>
+            <ul>
+        </section>
+        <section class="packages">
+                <h3 class="title">Some of our most in-demand pros</h3>
+                <p>We offer a variety of Tutors, Coaches and Helpers. Whether you want to find a Tutor to help you in your studies or you want a coach to help you in your cocurricular activities, we've got the perfect people for you.</p>
+                <hr>
+            
+                <ul class="grid">
+                  <li>
+                    <i class="fa fa-compass fa-4x"></i>
+                    <h4>English Tutors</h4>
+                    <p>Looking for the Best english tutors? Take a tour with one of our experts. They'll show you secrets that you're likely to miss otherwise.</p>
+                  </li>
+                  <li>
+                    <i class="fa fa-camera-retro fa-4x"></i>
+                    <h4>Technical Support Specialists</h4>
+                    <p>Want to experience nature's beauty without all of that annoying exercise? Take a photo tour on one of our mountain buses.</p>
+                  </li>
+                  <li>
+                    <i class="fa fa-bicycle fa-4x"></i>
+                    <h4>Bicycle Coaches</h4>
+                    <p>If bicycles are more your speed, consider taking a tour through mountain bike paths with the coach. We'll provide the coach, and lunch too!</p>
+                  </li>
+                  <li>
+                    <i class="fa fa-flag-checkered fa-4x"></i>
+                    <h4>Day Care Helpers</h4>
+                    <p>Got a Busy Schedule? Sign up for one of our Day Care Helper! They will take good care of your childrens.</p>
+                  </li>
+                </ul>
+              </section>
+            
+              <section class="testimonials">
+                <h3 class="title">Testimonials from our Users:</h3>
+                <hr>
+                <p class="quote">Upwork provides you great platform to put your skills in use and earn from them.
+                        An exposure to the global standards and work requirements here, helps you polish your raw edges.</p>
+                <p class="author">- Afaq Ahmed</p>
+                <p class="quote">It's an amazing work and network platform. In my opinion, the strong points of Pickuply, are the effectiveness of results, you really get jobs, you really get paid, it's very easy to get in touch with clients. And it has a very interesting jobs post, well paid. Every day Pickuply is getting better and better!</p>
+                <p class="author">- Zain Khalid</p>
+                <p class="quote">Amazing environment where i got my jobs ads to find best place to get jobs in different environments Hope i will get my required job very soon in your market.</p>
+                <p class="author">-Muhammad Sheryar</p>
+                <p class="quote">Its a productive and a place where you can learn and earn at the same time.
+                        It is a platform in which you can connect to people all around the world. people post different types of jobs on upwork and free lancers bid on them</p>
+                <p class="author">-Ahmed Ali Khan</p>
+              </section>
+            
+              <section class="contact">
+                <h3 class="title">Learn more</h3>
+                <p>Want to know about our upcoming features and events, or come to one of our mixers? Just sign up for our mailing list. No spam from us, we promise! Except for the spam we give you to keep up your energy while you're on your work. We have tons of that.</p>
+                <hr>
+                <form>
+                  <input type="email" placeholder="Email">
+                  <a href="#" class="btn">Subscribe now</a>
+                </form>
+              </section>
+            
+              <footer>
+                <p>Images courtesy of <a class="foot" href="http://unsplash.com/">unsplash</a>.</p>
+                <p>Why are you even reading this?! There's never anything interesting in the footer!</p>
+                <ul>
+                  <li><a href="#"><i class="fa fa-twitter-square fa-2x"></i></a></li>
+                  <li><a href="#"><i class="fa fa-facebook-square fa-2x"></i></a></li>
+                  <li><a href="#"><i class="fa fa-snapchat-square fa-2x"></i></a></li>
+                </ul>
+              </footer>
+
+
+    </body>
+</html>
